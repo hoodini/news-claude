@@ -17,104 +17,142 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0e27;
+            color: #ffffff;
             line-height: 1.6;
-            color: #1d1d1f;
-            background: #f5f5f7;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 51, 102, 0.3), transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 255, 255, 0.2), transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 20px 80px;
+            padding: 40px 20px 60px;
             text-align: center;
-            position: relative;
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(120, 119, 198, 0.1));
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .top-bar {
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
             font-size: 0.9em;
-            opacity: 0.95;
+            color: #00ffff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .top-bar a {
-            color: white;
+            color: #00ffff;
             text-decoration: none;
-            transition: opacity 0.2s;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
         .top-bar a:hover {
-            opacity: 0.8;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
         }
 
         .header h1 {
-            font-size: 3em;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #ff3366, #7877c6);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 5s ease infinite;
             margin-bottom: 15px;
-            margin-top: 30px;
+            letter-spacing: -2px;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .header .subtitle {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1.2em;
+            color: #a0a0ff;
+            font-weight: 500;
         }
 
         /* Stats Dashboard */
         .stats-container {
-            max-width: 1200px;
-            margin: -40px auto 60px;
+            max-width: 1400px;
+            margin: -30px auto 40px;
             padding: 0 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+            z-index: 10;
+            position: relative;
         }
 
         .stat-card {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.15), rgba(120, 119, 198, 0.15));
+            backdrop-filter: blur(20px);
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             color: inherit;
             display: block;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .stat-card.no-link {
             cursor: default;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(120, 119, 198, 0.2));
         }
 
         .stat-card:not(.no-link):hover {
-            background: rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(255, 51, 102, 0.4);
+            border-color: #ff3366;
         }
 
         .stat-number {
-            font-size: 2.5em;
-            font-weight: 700;
-            color: #667eea;
+            font-size: 3em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #ff3366);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 5px;
         }
 
         .stat-label {
-            font-size: 0.85em;
+            font-size: 0.9em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #6e6e73;
-            font-weight: 500;
+            letter-spacing: 2px;
+            color: #a0a0ff;
+            font-weight: 600;
         }
 
         /* Main Content */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -125,71 +163,101 @@
             align-items: center;
             justify-content: space-between;
             margin: 60px 0 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(0, 255, 255, 0.1));
+            border-radius: 15px;
+            border-left: 5px solid #ff3366;
         }
 
         .section-title {
-            font-size: 2em;
-            font-weight: 700;
-            color: #1d1d1f;
-            letter-spacing: -0.5px;
+            font-size: 2.5em;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -1px;
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
         .section-emoji {
-            font-size: 1.5em;
+            font-size: 1.2em;
+            filter: drop-shadow(0 0 10px rgba(255, 51, 102, 0.6));
         }
 
         .section-count {
-            background: #f5f5f7;
-            color: #6e6e73;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.5em;
-            font-weight: 500;
+            background: linear-gradient(135deg, #ff3366, #7877c6);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.4em;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
         }
 
-        /* Card Grid */
+        /* Card Grid - Masonry style */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 24px;
+            gap: 25px;
             margin-bottom: 40px;
         }
 
         /* Cards */
         .card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(18, 18, 35, 0.8), rgba(30, 30, 60, 0.8));
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             text-decoration: none;
             color: inherit;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(0, 255, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(255, 51, 102, 0.4);
+            border-color: #ff3366;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 16px;
-            gap: 16px;
+            margin-bottom: 20px;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .card-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #1d1d1f;
-            line-height: 1.4;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.3;
             flex: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .card-metric {
@@ -198,168 +266,207 @@
         }
 
         .metric-value {
-            font-size: 1.2em;
-            font-weight: 700;
-            color: #667eea;
+            font-size: 1.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #ff3366);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             white-space: nowrap;
         }
 
         .metric-sub {
-            font-size: 0.85em;
-            color: #34c759;
-            margin-top: 4px;
+            font-size: 0.9em;
+            color: #00ff88;
+            margin-top: 5px;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
         .metric-date {
             font-size: 0.85em;
-            color: #86868b;
-            margin-top: 4px;
+            color: #a0a0ff;
+            margin-top: 5px;
         }
 
         /* Badges */
         .badge {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 6px 16px;
+            border-radius: 20px;
             font-size: 0.85em;
-            font-weight: 500;
+            font-weight: 600;
             margin: 8px 8px 8px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
         }
 
         .badge-arxiv {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: linear-gradient(135deg, #00ff88, #00ffff);
+            color: #0a0e27;
         }
 
         .badge-context {
-            background: #f5f5f7;
-            color: #6e6e73;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.4), rgba(255, 51, 102, 0.4));
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Description */
         .card-description {
-            color: #6e6e73;
-            line-height: 1.6;
-            margin: 12px 0;
+            color: #c0c0ff;
+            line-height: 1.7;
+            margin: 15px 0;
             flex: 1;
+            position: relative;
+            z-index: 1;
         }
 
         /* Tags */
         .tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin: 12px 0;
+            gap: 10px;
+            margin: 15px 0;
+            position: relative;
+            z-index: 1;
         }
 
         .tag {
-            background: #f5f5f7;
-            color: #1d1d1f;
-            padding: 4px 12px;
-            border-radius: 12px;
+            background: rgba(120, 119, 198, 0.3);
+            color: #00ffff;
+            padding: 6px 14px;
+            border-radius: 15px;
             font-size: 0.85em;
+            font-weight: 500;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
         }
 
         /* Meta Info */
         .card-meta {
-            color: #86868b;
+            color: #8080ff;
             font-size: 0.9em;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f5f5f7;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
         }
 
         /* Footer */
         .footer {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, rgba(18, 18, 35, 0.9), rgba(30, 30, 60, 0.9));
+            backdrop-filter: blur(20px);
             padding: 60px 20px;
             text-align: center;
             margin-top: 80px;
-            color: #6e6e73;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .footer-content {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .creator-section {
-            border-top: 2px solid #667eea;
+            border-top: 3px solid #ff3366;
             padding-top: 40px;
             margin-top: 40px;
         }
 
         .creator-section h3 {
-            color: #1d1d1f;
-            font-size: 1.5em;
-            margin-bottom: 10px;
+            color: #00ffff;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 800;
         }
 
         .creator-name {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #1d1d1f;
-            margin: 10px 0;
+            font-size: 2em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #ff3366);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 15px 0;
         }
 
         .creator-title {
-            color: #6e6e73;
-            font-size: 1.1em;
-            margin-bottom: 20px;
+            color: #a0a0ff;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            font-weight: 500;
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff3366, #7877c6);
             color: white;
-            padding: 12px 32px;
-            border-radius: 20px;
+            padding: 16px 40px;
+            border-radius: 30px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.1em;
             margin: 20px 0;
-            transition: transform 0.2s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 30px rgba(255, 51, 102, 0.4);
         }
 
         .cta-button:hover {
-            transform: scale(1.05);
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 50px rgba(255, 51, 102, 0.6);
         }
 
         .social-links {
-            margin-top: 30px;
+            margin-top: 35px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
         }
 
         .social-link {
-            color: #667eea;
+            color: #00ffff;
             text-decoration: none;
-            transition: color 0.2s;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 1.05em;
         }
 
         .social-link:hover {
-            color: #764ba2;
+            color: #ff3366;
+            text-shadow: 0 0 15px rgba(255, 51, 102, 0.8);
+            transform: translateY(-3px);
         }
 
         .footer-credits {
-            margin-top: 30px;
-            font-size: 0.9em;
+            margin-top: 40px;
+            font-size: 0.95em;
+            color: #8080ff;
         }
 
         .footer-credits a {
-            color: #667eea;
+            color: #00ffff;
             text-decoration: none;
+            font-weight: 600;
         }
 
         .footer-credits a:hover {
-            text-decoration: underline;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
 
             .card-grid {
@@ -367,16 +474,27 @@
             }
 
             .section-title {
-                font-size: 1.5em;
+                font-size: 1.8em;
             }
 
             .stats-container {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .social-links {
                 flex-direction: column;
                 align-items: center;
+            }
+        }
+
+        /* Featured/First card larger */
+        .card:first-child {
+            grid-column: span 1;
+        }
+
+        @media (min-width: 1024px) {
+            .card:first-child {
+                grid-column: span 2;
             }
         }
     </style>
@@ -387,7 +505,7 @@
         <div class="top-bar">
             <strong>{{ creator_name }}</strong> • {{ creator_title }} • <strong><a href="{{ creator_website }}">YUV.AI</a></strong>
         </div>
-        <h1>{{ brand }}</h1>
+        <h1>🤖 {{ brand }}</h1>
         <div class="subtitle">{{ date }} • {{ time_range }}</div>
     </div>
 
@@ -430,7 +548,7 @@
                     <div class="card-metric">
                         <div class="metric-value">⭐ {{ repo.stars|format_number }}</div>
                         {% if repo.stars_today > 0 %}
-                        <div class="metric-sub">+{{ repo.stars_today }} ⭐ today</div>
+                        <div class="metric-sub">+{{ repo.stars_today }} today</div>
                         {% endif %}
                     </div>
                 </div>
@@ -440,15 +558,15 @@
                 {% if repo.topics %}
                 <div class="tags">
                     {% for topic in repo.topics[:5] %}
-                    <span class="tag">{{ topic }}</span>
+                    <span class="tag">#{{ topic }}</span>
                     {% endfor %}
                 </div>
                 {% endif %}
 
                 <div class="card-meta">
-                    {% if repo.language %}<span>{{ repo.language }}</span> • {% endif %}
-                    <span>{{ repo.forks|format_number }} forks</span>
-                    {% if repo.contributors > 0 %} • <span>{{ repo.contributors }} contributors</span>{% endif %}
+                    {% if repo.language %}<span>💻 {{ repo.language }}</span> • {% endif %}
+                    <span>🔀 {{ repo.forks|format_number }} forks</span>
+                    {% if repo.contributors > 0 %} • <span>👥 {{ repo.contributors }} contributors</span>{% endif %}
                 </div>
             </a>
             {% endfor %}
@@ -472,25 +590,25 @@
                     <div class="card-metric">
                         <div class="metric-value">👍 {{ paper.upvotes }}</div>
                         {% if paper.publication_date %}
-                        <div class="metric-date">{{ paper.publication_date[:7] }}</div>
+                        <div class="metric-date">📅 {{ paper.publication_date[:7] }}</div>
                         {% endif %}
                     </div>
                 </div>
 
                 {% if paper.arxiv_id %}
                 <div>
-                    <span class="badge badge-arxiv">arXiv:{{ paper.arxiv_id }}</span>
+                    <span class="badge badge-arxiv">📄 arXiv:{{ paper.arxiv_id }}</span>
                 </div>
                 {% endif %}
 
                 <div class="card-description">
                     {% if paper.authors %}
-                        {{ paper.authors[:3]|join(', ') }}{% if paper.authors|length > 3 %} et al.{% endif %}
+                        <strong>Authors:</strong> {{ paper.authors[:3]|join(', ') }}{% if paper.authors|length > 3 %} et al.{% endif %}
                     {% endif %}
                 </div>
 
                 <div class="card-meta">
-                    <span class="badge badge-context">📄 Research Paper</span>
+                    <span class="badge badge-context">🔬 Research Paper</span>
                 </div>
             </a>
             {% endfor %}
@@ -513,8 +631,10 @@
                     <div class="card-title">{{ space.space_id }}</div>
                     <div class="card-metric">
                         <div class="metric-value">❤️ {{ space.likes }}</div>
-                        {% if space.created_at %}
-                        <div class="metric-date">Created: {{ space.created_at }}</div>
+                        {% if space.last_modified %}
+                        <div class="metric-date">🔄 {{ space.last_modified }}</div>
+                        {% elif space.created_at %}
+                        <div class="metric-date">📅 {{ space.created_at }}</div>
                         {% endif %}
                     </div>
                 </div>
@@ -522,7 +642,7 @@
                 <div class="card-description">{{ space.description or 'Interactive AI demo' }}</div>
 
                 <div class="card-meta">
-                    <span class="badge badge-context">🚀 Interactive Demo</span>
+                    <span class="badge badge-context">🎮 Interactive Demo</span>
                     {% if space.sdk %}
                     <span class="tag">{{ space.sdk }}</span>
                     {% endif %}
@@ -551,7 +671,7 @@
                 <div class="card-description">{{ collection.description }}</div>
 
                 <div class="card-meta">
-                    <span class="badge badge-context">📚 Curated by GitHub</span>
+                    <span class="badge badge-context">⭐ Curated by GitHub</span>
                 </div>
             </a>
             {% endfor %}
@@ -566,13 +686,13 @@
                 <h3>✨ Built by</h3>
                 <div class="creator-name">{{ creator_name }}</div>
                 <div class="creator-title">{{ creator_title }}</div>
-                <a href="{{ creator_website }}" target="_blank" class="cta-button">🌐 YUV.AI</a>
+                <a href="{{ creator_website }}" target="_blank" class="cta-button">🌐 Visit YUV.AI</a>
 
                 <div class="social-links">
                     <a href="{{ creator_website }}" target="_blank" class="social-link">🌐 Website</a>
                     <a href="https://linktr.ee/yuvai" target="_blank" class="social-link">🔗 Linktree</a>
                     <a href="https://instagram.com/yuval_770" target="_blank" class="social-link">📸 Instagram</a>
-                    <a href="https://twitter.com/yuvalav" target="_blank" class="social-link">🐦 Twitter/X</a>
+                    <a href="https://twitter.com/yuvalav" target="_blank" class="social-link">🐦 X/Twitter</a>
                     <a href="https://github.com/hoodini" target="_blank" class="social-link">💻 GitHub</a>
                     <a href="https://youtube.com/@yuv-ai" target="_blank" class="social-link">📺 YouTube</a>
                     <a href="https://tiktok.com/@yuval.ai" target="_blank" class="social-link">🎵 TikTok</a>
@@ -580,11 +700,11 @@
             </div>
 
             <div class="footer-credits">
-                <p><strong>Generated by Gen AI News Aggregator</strong></p>
-                <p>Data sources: <a href="https://github.com/trending" target="_blank">GitHub Trending</a> •
-                   <a href="https://huggingface.co/papers" target="_blank">Hugging Face Papers</a> •
-                   <a href="https://huggingface.co/spaces" target="_blank">Hugging Face Spaces</a></p>
-                <p style="margin-top: 20px; color: #86868b;">Generated on {{ generated_at }}</p>
+                <p><strong>⚡ Powered by Gen AI News Aggregator</strong></p>
+                <p>Data: <a href="https://github.com/trending" target="_blank">GitHub Trending</a> •
+                   <a href="https://huggingface.co/papers" target="_blank">HF Papers</a> •
+                   <a href="https://huggingface.co/spaces" target="_blank">HF Spaces</a></p>
+                <p style="margin-top: 25px; color: #6060a0;">🕐 Generated on {{ generated_at }}</p>
             </div>
         </div>
     </div>

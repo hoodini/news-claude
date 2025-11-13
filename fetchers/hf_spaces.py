@@ -25,28 +25,53 @@ class HFSpacesFetcher:
         try:
             # Import here to make it optional
             from huggingface_hub import HfApi
+            from datetime import timedelta
 
             if not self.hf_api:
                 self.hf_api = HfApi()
 
-            # List spaces sorted by likes
+            # Fetch more spaces and filter by recency
+            # Try to get recently modified spaces first
             spaces = self.hf_api.list_spaces(
-                sort="likes",
+                sort="lastModified",
                 direction=-1,
-                limit=limit,
+                limit=limit * 3,  # Fetch more to filter
                 full=True
             )
 
             result = []
+            cutoff_date = datetime.now() - timedelta(days=60)  # Last 60 days
+
             for space in spaces:
                 try:
                     space_data = self._parse_space(space)
                     if space_data:
-                        result.append(space_data)
+                        # Check if space is recent enough
+                        if hasattr(space, 'lastModified') and space.lastModified:
+                            last_modified = space.lastModified
+                            if hasattr(last_modified, 'replace'):
+                                # It's a datetime, compare
+                                if last_modified.replace(tzinfo=None) >= cutoff_date:
+                                    result.append(space_data)
+                            else:
+                                result.append(space_data)
+                        elif hasattr(space, 'created_at') and space.created_at:
+                            created = space.created_at
+                            if hasattr(created, 'replace'):
+                                if created.replace(tzinfo=None) >= cutoff_date:
+                                    result.append(space_data)
+                            else:
+                                result.append(space_data)
+                        else:
+                            # No date info, include it
+                            result.append(space_data)
+
+                    if len(result) >= limit:
+                        break
                 except Exception as e:
                     continue
 
-            return result
+            return result[:limit]
 
         except ImportError:
             print("⚠️ huggingface_hub not installed. Skipping spaces.")
@@ -92,6 +117,12 @@ class HFSpacesFetcher:
                 if space.created_at:
                     created_at = space.created_at.strftime('%Y-%m-%d') if hasattr(space.created_at, 'strftime') else str(space.created_at)
 
+            # Last modified date
+            last_modified = None
+            if hasattr(space, 'lastModified'):
+                if space.lastModified:
+                    last_modified = space.lastModified.strftime('%Y-%m-%d') if hasattr(space.lastModified, 'strftime') else str(space.lastModified)
+
             return {
                 'source': 'huggingface',
                 'type': 'space',
@@ -102,6 +133,7 @@ class HFSpacesFetcher:
                 'likes': likes,
                 'sdk': sdk,
                 'created_at': created_at,
+                'last_modified': last_modified,
                 'fetched_at': datetime.now().isoformat()
             }
 

@@ -71,60 +71,69 @@ class NewsRanker:
             return 0.0
 
     def _score_github_repo(self, repo: Dict) -> float:
-        """Score a GitHub repository"""
+        """Score a GitHub repository - heavily favor velocity"""
         stars = repo.get('stars', 0)
         stars_today = repo.get('stars_today', 0)
 
-        # Stars score: log scale, capped at 50
-        stars_score = min(50, math.log10(stars + 1) * 10)
+        # Velocity is KING - this is what makes it trending!
+        # Score heavily based on stars gained today
+        if stars_today > 0:
+            # Exponential scoring for velocity
+            velocity_score = min(70, stars_today * 5)
+        else:
+            velocity_score = 0
 
-        # Velocity score: stars gained today, capped at 30
-        velocity_score = min(30, stars_today * 2)
+        # Stars score: much lower weight, log scale
+        # Only matters if velocity is present
+        stars_score = min(20, math.log10(stars + 1) * 3)
 
-        # Recency score: base score for trending items
-        recency_score = 20
+        # Recency bonus for trending items
+        recency_score = 10
 
-        # Weighted combination
+        # Weighted combination - velocity dominates
         total_score = (
-            stars_score * self.weights['github_stars'] +
-            velocity_score * self.weights['github_velocity'] +
-            recency_score * self.weights['github_recency']
+            velocity_score * 0.7 +  # Velocity is 70% of score
+            stars_score * 0.2 +      # Total stars is 20%
+            recency_score * 0.1      # Recency is 10%
         )
 
         return min(100, total_score)
 
     def _score_paper(self, paper: Dict) -> float:
-        """Score a research paper"""
+        """Score a research paper - upvotes show recent popularity"""
         upvotes = paper.get('upvotes', 0)
 
-        # Upvote score: capped at 50
-        upvote_score = min(50, upvotes * 3)
+        # Upvote score: higher multiplier for popular papers
+        upvote_score = min(70, upvotes * 5)
 
-        # Recency score: papers on HF are recent
+        # Recency score: all papers on HF are recent
         recency_score = 30
 
         # Weighted combination
         total_score = (
-            upvote_score * self.weights['paper_upvote'] +
-            recency_score * self.weights['paper_recency']
+            upvote_score * 0.7 +
+            recency_score * 0.3
         )
 
         return min(100, total_score)
 
     def _score_space(self, space: Dict) -> float:
-        """Score a Hugging Face space"""
+        """Score a Hugging Face space - recently modified matters"""
         likes = space.get('likes', 0)
 
-        # Likes score: log scale, capped at 50
-        likes_score = min(50, math.log10(likes + 1) * 15)
+        # Check if recently modified (we filtered for this)
+        last_modified = space.get('last_modified')
 
-        # Recency score
-        recency_score = 30
+        # Likes score: log scale
+        likes_score = min(50, math.log10(likes + 1) * 12)
+
+        # Recency bonus: spaces in our list are already recent
+        recency_score = 40
 
         # Weighted combination
         total_score = (
-            likes_score * self.weights['space_likes'] +
-            recency_score * self.weights['space_recency']
+            likes_score * 0.5 +
+            recency_score * 0.5
         )
 
         return min(100, total_score)
