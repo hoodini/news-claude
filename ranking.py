@@ -76,46 +76,51 @@ class NewsRanker:
         stars_today = repo.get('stars_today', 0)
 
         # Velocity is KING - this is what makes it trending!
-        # Score heavily based on stars gained today
-        if stars_today > 0:
-            # Exponential scoring for velocity
-            velocity_score = min(70, stars_today * 5)
+        # If no velocity, score is very low
+        if stars_today == 0:
+            return 20.0  # Almost no score for repos with no daily growth
+
+        # Tiered velocity scoring - reward high velocity exponentially
+        if stars_today >= 500:
+            velocity_score = 95
+        elif stars_today >= 300:
+            velocity_score = 90
+        elif stars_today >= 200:
+            velocity_score = 85
+        elif stars_today >= 100:
+            velocity_score = 80
+        elif stars_today >= 50:
+            velocity_score = 70
+        elif stars_today >= 25:
+            velocity_score = 60
         else:
-            velocity_score = 0
+            velocity_score = 40 + stars_today  # Linear for low velocity
 
-        # Stars score: much lower weight, log scale
-        # Only matters if velocity is present
-        stars_score = min(20, math.log10(stars + 1) * 3)
+        # Small bonus for having many total stars (quality signal)
+        stars_bonus = min(5, math.log10(stars + 1) * 0.8)
 
-        # Recency bonus for trending items
-        recency_score = 10
-
-        # Weighted combination - velocity dominates
-        total_score = (
-            velocity_score * 0.7 +  # Velocity is 70% of score
-            stars_score * 0.2 +      # Total stars is 20%
-            recency_score * 0.1      # Recency is 10%
-        )
-
-        return min(100, total_score)
+        return min(100, velocity_score + stars_bonus)
 
     def _score_paper(self, paper: Dict) -> float:
         """Score a research paper - upvotes show recent popularity"""
         upvotes = paper.get('upvotes', 0)
 
-        # Upvote score: higher multiplier for popular papers
-        upvote_score = min(70, upvotes * 5)
+        # Tiered upvote scoring
+        if upvotes >= 100:
+            upvote_score = 85
+        elif upvotes >= 75:
+            upvote_score = 80
+        elif upvotes >= 50:
+            upvote_score = 75
+        elif upvotes >= 25:
+            upvote_score = 65
+        else:
+            upvote_score = 40 + upvotes
 
-        # Recency score: all papers on HF are recent
-        recency_score = 30
+        # Recency bonus: papers on HF are recent
+        recency_bonus = 5
 
-        # Weighted combination
-        total_score = (
-            upvote_score * 0.7 +
-            recency_score * 0.3
-        )
-
-        return min(100, total_score)
+        return min(100, upvote_score + recency_bonus)
 
     def _score_space(self, space: Dict) -> float:
         """Score a Hugging Face space - recently modified matters"""
@@ -139,8 +144,8 @@ class NewsRanker:
         return min(100, total_score)
 
     def _score_collection(self, collection: Dict) -> float:
-        """Score a curated collection (fixed high score)"""
-        return 70.0  # Curated content gets consistent good score
+        """Score a curated collection (lower than trending repos)"""
+        return 45.0  # Lower than actual trending content
 
     def filter_by_time_range(self, items: List[Dict], days: int) -> List[Dict]:
         """
