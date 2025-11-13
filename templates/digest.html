@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ brand }} - {{ date }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1d1d1f;
+            background: #f5f5f7;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .top-bar a:hover {
+            opacity: 0.8;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Stats Dashboard */
+        .stats-container {
+            max-width: 1200px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .stat-card.no-link {
+            cursor: default;
+        }
+
+        .stat-card:not(.no-link):hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6e6e73;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 60px 0 30px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-emoji {
+            font-size: 1.5em;
+        }
+
+        .section-count {
+            background: #f5f5f7;
+            color: #6e6e73;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.5em;
+            font-weight: 500;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 16px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1d1d1f;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .card-metric {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .metric-value {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #667eea;
+            white-space: nowrap;
+        }
+
+        .metric-sub {
+            font-size: 0.85em;
+            color: #34c759;
+            margin-top: 4px;
+        }
+
+        .metric-date {
+            font-size: 0.85em;
+            color: #86868b;
+            margin-top: 4px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin: 8px 8px 8px 0;
+        }
+
+        .badge-arxiv {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-context {
+            background: #f5f5f7;
+            color: #6e6e73;
+        }
+
+        /* Description */
+        .card-description {
+            color: #6e6e73;
+            line-height: 1.6;
+            margin: 12px 0;
+            flex: 1;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .tag {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+
+        /* Meta Info */
+        .card-meta {
+            color: #86868b;
+            font-size: 0.9em;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f5f5f7;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f8f9fa;
+            padding: 60px 20px;
+            text-align: center;
+            margin-top: 80px;
+            color: #6e6e73;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .creator-section {
+            border-top: 2px solid #667eea;
+            padding-top: 40px;
+            margin-top: 40px;
+        }
+
+        .creator-section h3 {
+            color: #1d1d1f;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .creator-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin: 10px 0;
+        }
+
+        .creator-title {
+            color: #6e6e73;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        .social-links {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-link {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .social-link:hover {
+            color: #764ba2;
+        }
+
+        .footer-credits {
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        .footer-credits a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer-credits a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.5em;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="top-bar">
+            <strong>{{ creator_name }}</strong> • {{ creator_title }} • <strong><a href="{{ creator_website }}">YUV.AI</a></strong>
+        </div>
+        <h1>{{ brand }}</h1>
+        <div class="subtitle">{{ date }} • {{ time_range }}</div>
+    </div>
+
+    <!-- Stats Dashboard -->
+    <div class="stats-container">
+        <div class="stat-card no-link">
+            <div class="stat-number">{{ total_items }}</div>
+            <div class="stat-label">Total Items</div>
+        </div>
+        <a href="#github-trending" class="stat-card">
+            <div class="stat-number">{{ github_count }}</div>
+            <div class="stat-label">GitHub Repos</div>
+        </a>
+        <a href="#hf-papers" class="stat-card">
+            <div class="stat-number">{{ papers_count }}</div>
+            <div class="stat-label">Papers</div>
+        </a>
+        <a href="#hf-spaces" class="stat-card">
+            <div class="stat-number">{{ spaces_count }}</div>
+            <div class="stat-label">Spaces</div>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- GitHub Trending Repositories -->
+        {% if github_repos %}
+        <div id="github-trending" class="section-header">
+            <div class="section-title">
+                <span class="section-emoji">🔥</span>
+                GitHub Trending
+                <span class="section-count">{{ github_repos|length }}</span>
+            </div>
+        </div>
+        <div class="card-grid">
+            {% for repo in github_repos %}
+            <a href="{{ repo.url }}" target="_blank" class="card">
+                <div class="card-header">
+                    <div class="card-title">{{ repo.name }}</div>
+                    <div class="card-metric">
+                        <div class="metric-value">⭐ {{ repo.stars|format_number }}</div>
+                        {% if repo.stars_today > 0 %}
+                        <div class="metric-sub">+{{ repo.stars_today }} ⭐ today</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-description">{{ repo.description }}</div>
+
+                {% if repo.topics %}
+                <div class="tags">
+                    {% for topic in repo.topics[:5] %}
+                    <span class="tag">{{ topic }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="card-meta">
+                    {% if repo.language %}<span>{{ repo.language }}</span> • {% endif %}
+                    <span>{{ repo.forks|format_number }} forks</span>
+                    {% if repo.contributors > 0 %} • <span>{{ repo.contributors }} contributors</span>{% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Hugging Face Papers -->
+        {% if papers %}
+        <div id="hf-papers" class="section-header">
+            <div class="section-title">
+                <span class="section-emoji">📄</span>
+                Research Papers
+                <span class="section-count">{{ papers|length }}</span>
+            </div>
+        </div>
+        <div class="card-grid">
+            {% for paper in papers %}
+            <a href="{{ paper.url }}" target="_blank" class="card">
+                <div class="card-header">
+                    <div class="card-title">{{ paper.title }}</div>
+                    <div class="card-metric">
+                        <div class="metric-value">👍 {{ paper.upvotes }}</div>
+                        {% if paper.publication_date %}
+                        <div class="metric-date">{{ paper.publication_date[:7] }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if paper.arxiv_id %}
+                <div>
+                    <span class="badge badge-arxiv">arXiv:{{ paper.arxiv_id }}</span>
+                </div>
+                {% endif %}
+
+                <div class="card-description">
+                    {% if paper.authors %}
+                        {{ paper.authors[:3]|join(', ') }}{% if paper.authors|length > 3 %} et al.{% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="card-meta">
+                    <span class="badge badge-context">📄 Research Paper</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Hugging Face Spaces -->
+        {% if spaces %}
+        <div id="hf-spaces" class="section-header">
+            <div class="section-title">
+                <span class="section-emoji">🚀</span>
+                Interactive Spaces
+                <span class="section-count">{{ spaces|length }}</span>
+            </div>
+        </div>
+        <div class="card-grid">
+            {% for space in spaces %}
+            <a href="{{ space.url }}" target="_blank" class="card">
+                <div class="card-header">
+                    <div class="card-title">{{ space.space_id }}</div>
+                    <div class="card-metric">
+                        <div class="metric-value">❤️ {{ space.likes }}</div>
+                        {% if space.created_at %}
+                        <div class="metric-date">Created: {{ space.created_at }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-description">{{ space.description or 'Interactive AI demo' }}</div>
+
+                <div class="card-meta">
+                    <span class="badge badge-context">🚀 Interactive Demo</span>
+                    {% if space.sdk %}
+                    <span class="tag">{{ space.sdk }}</span>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- GitHub Collections -->
+        {% if collections %}
+        <div id="github-collections" class="section-header">
+            <div class="section-title">
+                <span class="section-emoji">📚</span>
+                Curated Collections
+                <span class="section-count">{{ collections|length }}</span>
+            </div>
+        </div>
+        <div class="card-grid">
+            {% for collection in collections %}
+            <a href="{{ collection.url }}" target="_blank" class="card">
+                <div class="card-header">
+                    <div class="card-title">{{ collection.title }}</div>
+                </div>
+
+                <div class="card-description">{{ collection.description }}</div>
+
+                <div class="card-meta">
+                    <span class="badge badge-context">📚 Curated by GitHub</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="creator-section">
+                <h3>✨ Built by</h3>
+                <div class="creator-name">{{ creator_name }}</div>
+                <div class="creator-title">{{ creator_title }}</div>
+                <a href="{{ creator_website }}" target="_blank" class="cta-button">🌐 YUV.AI</a>
+
+                <div class="social-links">
+                    <a href="{{ creator_website }}" target="_blank" class="social-link">🌐 Website</a>
+                    <a href="https://linktr.ee/yuvai" target="_blank" class="social-link">🔗 Linktree</a>
+                    <a href="https://instagram.com/yuval_770" target="_blank" class="social-link">📸 Instagram</a>
+                    <a href="https://twitter.com/yuvalav" target="_blank" class="social-link">🐦 Twitter/X</a>
+                    <a href="https://github.com/hoodini" target="_blank" class="social-link">💻 GitHub</a>
+                    <a href="https://youtube.com/@yuv-ai" target="_blank" class="social-link">📺 YouTube</a>
+                    <a href="https://tiktok.com/@yuval.ai" target="_blank" class="social-link">🎵 TikTok</a>
+                </div>
+            </div>
+
+            <div class="footer-credits">
+                <p><strong>Generated by Gen AI News Aggregator</strong></p>
+                <p>Data sources: <a href="https://github.com/trending" target="_blank">GitHub Trending</a> •
+                   <a href="https://huggingface.co/papers" target="_blank">Hugging Face Papers</a> •
+                   <a href="https://huggingface.co/spaces" target="_blank">Hugging Face Spaces</a></p>
+                <p style="margin-top: 20px; color: #86868b;">Generated on {{ generated_at }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
